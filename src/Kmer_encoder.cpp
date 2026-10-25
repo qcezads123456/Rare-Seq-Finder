@@ -69,7 +69,7 @@ unordered_map <uint64_t, uint64_t> build_kmers_index
 unordered_map <uint64_t, vector <uint64_t>> find_rare_kmers   // [kmer_encode, position(actual value)]
 (const DNA_info_t &genome_mutant, int kmer_size 
 ,const unordered_map<uint64_t,uint64_t> &kmer_index 
-,int isolate_amount,const cli_parameter &parameter_set){  //probably need struct to encapsulate all parameters
+,const int isolate_amount,const cli_parameter &parameter_set){  //probably need struct to encapsulate all parameters
     unordered_map <uint64_t, vector<uint64_t>> low_frequency_kmer;
     uint64_t kmer_mask=1ULL;
     kmer_mask=(kmer_mask<<(kmer_size*2))-1;

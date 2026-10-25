@@ -1,6 +1,7 @@
 #include "cli.h"
 using namespace std;
 namespace fs= std::filesystem;
+unordered_set<string> extend={".fa", ".fasta", ".fna", ".fas"};
 bool help_parser(int argc, char* argv[]){
     for(int i=0;i<argc;i++){
         string arg=argv[i];

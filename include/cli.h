@@ -3,7 +3,8 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
-#define compare() entry.extension() != ".fasta"
+#include <unordered_set>
+#define compare() extend.find(entry.extension()) == extend.end()
 #define max_ref_freq_condition() (arg=="-mrf" || arg== "--max-ref-freq")
 #define coverage_threshold_condition() (arg=="-ct" || arg== "--coverage")
 #define kmer_size_conditoin() (arg=="-k" || arg== "--kmer-size")

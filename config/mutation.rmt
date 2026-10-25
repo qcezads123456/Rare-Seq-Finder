@@ -1,0 +1,20 @@
+std
+it None
+None
+
+
+chr 1
+it None
+1-END sn 0.01
+
+chr 2
+it None
+1-END in 0.005 inmin 1 inmax 30
+
+chr 3
+it None
+1-END de 0.005 demin 1 demax 30
+
+chr 4
+it None
+1-END sn 0.005 in 0.005 inmin 1 inmax 30 de 0.005 demin 1 demax 30

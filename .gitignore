@@ -1,6 +1,11 @@
 build/*
 !build/.gitkeep
 scripts
-data/*
-!data/.gitkeep
+data/MS_output/*
+!data/MS_output/.gitkeep
+data/ref/*
+!data/ref/.gitkeep
+data/selected/*
+!data/selected/.gitkeep
 result/result.txt
+.venv

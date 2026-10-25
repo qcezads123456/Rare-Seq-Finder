@@ -15,14 +15,24 @@ description
 ## Quick Start
 
 ### Requirements
+Linux / wsl with:
 
 ## Project Structure
 ```text
-HTTP1.0-Web-Server
+Rare-Seq-Finder
 ├── CMakeLists.txt
 ├── README.md
 ├── build/              # Stores compiled executable files
-├── data/             
+├── config/
+│   └── mutation.rmt
+├── data/
+│   ├── demo/
+│   │   ├── default_mutation_ground_truth.vcf
+│   │   ├── default_mutation.fasta
+│   │   └── default_ref.fasta
+│   ├── MS_output/
+│   ├── ref/
+│   └── selected/          
 ├── include/            # Header files
 │   ├── main.h
 │   ├── cli.h
@@ -38,8 +48,7 @@ HTTP1.0-Web-Server
 │   ├── Kmer_encoder.cpp
 │   └── result_processor.cpp
 ├── scripts/
-|   └── inject_snps.py
-├── result/          
-└── 
+|   └── select_seq.py  # Select one sequence randomly from reference FASTA file
+└── result/           
 ```
 ## Performance Benchmark
