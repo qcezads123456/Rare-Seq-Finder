@@ -1,6 +1,5 @@
 build/*
 !build/.gitkeep
-scripts
 data/MS_output/*
 !data/MS_output/.gitkeep
 data/ref/*
