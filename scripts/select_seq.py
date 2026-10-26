@@ -92,31 +92,17 @@ def main():
     )
     parser.add_argument("--ref", "--input", dest="ref", default="data/ref/ref.fasta",
                         help="FASTA file (default: data/ref/ref.fasta)")
-    parser.add_argument("--output",dest="output", default="data/selected/selected.fasta",
-                        help=" Output directory or FASTA file (default: data/selected/selected.fasta)")
+
     args = parser.parse_args()
 
     ref_path = project_path(args.ref)
-    selected_output = project_path(args.output)
-    default_output_path= project_path("data/selected/selected.fasta")
-    default_filename="selected_fasta"
-    if selected_output.resolve() == default_output_path.resolve():
-        selected_output.parent.mkdir(parents=True , exist_ok=True)
-        selected_output.touch(exist_ok=True)
+    selected_output = project_path("data/selected/selected.fasta")
     if not ref_path.exists(): 
         parser.error("input must be an existing file")
     if ref_path.resolve() == selected_output.resolve():
         parser.error("reference FASTA file cannot be overwirte")
     if not ref_path.suffix.lower() in FASTA_SUFFIXES :
         parser.error("cannot open the file")
-    if selected_output.exists():
-        if selected_output.is_dir() :
-                selected_output= selected_output / default_filename
-        elif selected_output.is_file():
-            if not selected_output.suffix.lower() in FASTA_SUFFIXES :
-                parser.error("output must be a FASTA file")
-    else :
-        parser.error("invalid output directory")
     seed= random.randrange(30000)
     print(seed)
     rng = random.Random(seed)

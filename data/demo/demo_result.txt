@@ -1,0 +1,17 @@
+Analysis Report
+
+Reference sequences: 1
+k-mer size: 21
+coverage threshold: 21
+max reference frequency: 0%
+
+------------------------------------------------------------------------
+
+NC_001401.2 Adeno-associated virus - 2, complete genome
+
+288 - 288  C
+1947 - 1947  C
+2874 - 2874  G
+3248 - 3248  C
+
+

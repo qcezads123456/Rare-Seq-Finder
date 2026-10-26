@@ -1,6 +1,6 @@
 # Rare Sequence Finder
 
-description
+Rare Sequence Finder is a C++ tool for identifying candidate DNA sequence positions enriched in **rare k-mers** relative to a user-provided reference collection with alignment-free approach.
 
 ## Features
 
@@ -19,36 +19,26 @@ Linux / wsl with:
 
 ## Project Structure
 ```text
-Rare-Seq-Finder
-├── CMakeLists.txt
+Rare-Seq-Finder/
 ├── README.md
-├── build/              # Stores compiled executable files
+├── CMakeLists.txt
+├── Makefile                  
 ├── config/
-│   └── mutation.rmt
+│   └── mutation.rmt             # Mutation-Simulator configuration
 ├── data/
-│   ├── demo/
-│   │   ├── default_mutation_ground_truth.vcf
-│   │   ├── default_mutation.fasta
-│   │   └── default_ref.fasta
-│   ├── MS_output/
-│   ├── ref/
-│   └── selected/          
-├── include/            # Header files
-│   ├── main.h
-│   ├── cli.h
-│   ├── decoder.h
-│   ├── Fasta_reader.h
-│   ├── Kmer_encoder.h
-│   └── result_processor.h
-├── src/                # Source files
-│   ├── main.cpp
-│   ├── cli.cpp
-│   ├── decoder.cpp
-│   ├── Fasta_reader.cpp
-│   ├── Kmer_encoder.cpp
-│   └── result_processor.cpp
+│   ├── demo/
+│   │   ├── demo_ref.fasta
+│   │   ├── demo_mutation.fasta
+│   │   ├── demo_result.fasta
+│   │   └── demo_mutation_ground_truth.vcf
+│   ├── ref/                    # User-provided reference data
+│   ├── selected/               # Sequence-selection output
+│   └── MS_output/              # Mutation-simulation output directory
+├── include/                    # C++ headers
+├── src/                        # C++ implementation
 ├── scripts/
-|   └── select_seq.py  # Select one sequence randomly from reference FASTA file
-└── result/           
+│   └── select_seq.py
+├── build/                      # Compiled executable
+└── result/                     # Analysis report
 ```
 ## Performance Benchmark

@@ -8,3 +8,4 @@ data/selected/*
 !data/selected/.gitkeep
 result/result.txt
 .venv
+data/demo/test

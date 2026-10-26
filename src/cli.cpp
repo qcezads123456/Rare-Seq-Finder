@@ -1,4 +1,11 @@
 #include "cli.h"
+#define compare() extend.find(entry.extension()) == extend.end()
+#define max_ref_freq_condition() (arg=="-mrf" || arg== "--max-ref-freq")
+#define coverage_threshold_condition() (arg=="-ct" || arg== "--coverage")
+#define kmer_size_conditoin() (arg=="-k" || arg== "--kmer-size")
+#define ref_destination() (arg=="-r" || arg== "--reference")
+#define tested_destination() (arg=="-m" || arg== "--mutant")
+#define help_CLI() (arg=="-h" || arg== "--help")
 using namespace std;
 namespace fs= std::filesystem;
 unordered_set<string> extend={".fa", ".fasta", ".fna", ".fas"};
@@ -46,4 +53,17 @@ bool cli_parser(int argc,char* argv[],cli_parameter &parameter_set){
     if(!ct_set) parameter_set.coverage_threshold=parameter_set.kmer_size;
     if(parameter_set.coverage_threshold<=0 || parameter_set.coverage_threshold >parameter_set.kmer_size) return 0;
     return ref_set & mutant_set;
+}
+void print_help_line(const string prog){
+    cerr<<   "Usage:\n"\
+             "  "\
+             <<prog<<
+             " -r <reference.fasta> -m <mutant.fasta> [options] \n\n"\
+             "Required:\n"\
+             "  -r, --reference        Reference FASTA file \n"\
+             "  -m, --mutant           Target FASTA file\n\n"\
+             "Options:\n"\
+             "  -k, --kmer-size        K-mer size (1-31)\n"\
+             "  -mrf, --max-ref-freq   Maximum reference frequency [0.0, 1.0)\n"\
+             "  -ct, --coverage        Minimum rare k-mer coverage (1 to k-mer size)\n";
 }

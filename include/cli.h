@@ -4,13 +4,6 @@
 #include <iostream>
 #include <filesystem>
 #include <unordered_set>
-#define compare() extend.find(entry.extension()) == extend.end()
-#define max_ref_freq_condition() (arg=="-mrf" || arg== "--max-ref-freq")
-#define coverage_threshold_condition() (arg=="-ct" || arg== "--coverage")
-#define kmer_size_conditoin() (arg=="-k" || arg== "--kmer-size")
-#define ref_destination() (arg=="-r" || arg== "--reference")
-#define tested_destination() (arg=="-m" || arg== "--mutant")
-#define help_CLI() (arg=="-h" || arg== "--help")
 typedef struct cli_parameter{
     std::filesystem::path ref_des;
     std::filesystem::path mutant_des;
@@ -20,4 +13,5 @@ typedef struct cli_parameter{
 }cli_parameter;
 bool help_parser(int argc, char* argv[]);
 bool cli_parser(int argc, char* argv[],cli_parameter &parameter_set);
+void print_help_line(const std::string prog);
 #endif

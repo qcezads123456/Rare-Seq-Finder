@@ -5,13 +5,15 @@ namespace fs=std::filesystem;
 int main(int argc,char* argv[]){
     vector <DNA_info_t> genome_isolate,genome_mutant;
     cli_parameter parameter_set;
+    const char* env=getenv("RUN_VIA_MAKE");
+    const string prog= env ? env : fs::path(argv[0]).filename().string();
     if(help_parser(argc,argv)){
-        cerr<<help_line;
+        print_help_line(prog);
         return 0;
     }
     if (!cli_parser(argc, argv, parameter_set)) {
         cerr<<"ERROR: Invalid arguments.\n\n";
-        cerr<<help_line;
+        print_help_line(prog);
 
         return EXIT_FAILURE;
     }
