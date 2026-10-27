@@ -25,16 +25,17 @@ DEFAULT_REF_FASTA = $(firstword $(wildcard $(REF_DIR)/ref.fasta))
 $(VENV_PY):
 	@$(PYTHON) -m venv $(VENV)
 
-build :
+build : $(build/CMakeCache.txt)
 	@cmake -S . -B build
+$(build/CMakeCache.txt) : $(CmakeLists.txt)
 	@cmake --build build
 
 run : build
-	@if [ -z "$(filter -r,$(RUN_ARGS))" ] && [ -z "$(DEFAULT_REF_FASTA)" ]; then \
+	@if [ -z "$(filter --reference -r,$(RUN_ARGS))" ] && [ -z "$(DEFAULT_REF_FASTA)" ]; then \
 		echo "ERROR: ref.fasta not found"; \
 		exit 1; \
 	fi
-	@if [ -z "$(filter -m,$(RUN_ARGS))" ] && [ -z "$(DEFAULT_MS_FASTA)" ]; then \
+	@if [ -z "$(filter --mutant -m,$(RUN_ARGS))" ] && [ -z "$(DEFAULT_MS_FASTA)" ]; then \
 		echo "ERROR: *_ms.fasta not found"; \
 		exit 1; \
 	fi
@@ -43,10 +44,12 @@ run : build
 	$(if $(filter -r,$(RUN_ARGS)),,-r $(DEFAULT_REF_FASTA)) \
 	$(if $(filter -m,$(RUN_ARGS)),,-m $(DEFAULT_MS_FASTA))
 
-ms_setup : $(VENV_PY)
+ms_setup : $(VENV_MS)
+
+$(VENV_MS) : $(VENV_PY)
 	@$(VENV_PY) -m pip install Mutation-Simulator
 
-generate_test_data :
+generate_test_data : ms_setup
 	@$(VENV_PY) scripts/select_seq.py $(GENERATE_ARGS)
 	@$(VENV_MS) -o $(MS_OUTPUT)/mutant.fasta $(SELECTED_DIR) rmt config/mutation.rmt
 	@echo "mutation simulation complete"

@@ -3,10 +3,14 @@ using namespace std;
 
 static int parser(char nucleotide){
     switch(nucleotide){
-        case 'A': return 0b00;
-        case 'C': return 0b01;
-        case 'G': return 0b10;
-        case 'T': return 0b11;
+        case 'A':
+        case 'a': return 0b00;
+        case 'C':
+        case 'c': return 0b01;
+        case 'G':
+        case 'g': return 0b10;
+        case 'T':
+        case 't': return 0b11;
         default : return 0b111;
     }
 }
