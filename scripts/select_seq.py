@@ -81,7 +81,6 @@ def write_fasta(path, header, sequence):
             out.write(f">{serial_num}|{s} {name}\n")
             for i in range(0, len(sequence), 80):
                 out.write(sequence[i:i + 80] + "\n")
-            out.write("\n")
 
 
 

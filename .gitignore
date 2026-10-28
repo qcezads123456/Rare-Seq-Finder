@@ -6,7 +6,8 @@ data/ref/*
 !data/ref/.gitkeep
 data/selected/*
 !data/selected/.gitkeep
-result/result.txt
-result/result.tsv
+result/*
+!result/.gitkeep
 .venv
 data/demo/test
+analysis

@@ -25,9 +25,8 @@ DEFAULT_REF_FASTA = $(firstword $(wildcard $(REF_DIR)/ref.fasta))
 $(VENV_PY):
 	@$(PYTHON) -m venv $(VENV)
 
-build : $(build/CMakeCache.txt)
+build:
 	@cmake -S . -B build
-$(build/CMakeCache.txt) : $(CmakeLists.txt)
 	@cmake --build build
 
 run : build
