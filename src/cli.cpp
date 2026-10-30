@@ -2,7 +2,7 @@
 #define compare() extend.find(entry.extension()) == extend.end()
 #define max_ref_freq_condition() (arg=="-mrf" || arg== "--max-ref-freq")
 #define coverage_threshold_condition() (arg=="-ct" || arg== "--coverage")
-#define kmer_size_conditoin() (arg=="-k" || arg== "--kmer-size")
+#define kmer_size_condition() (arg=="-k" || arg== "--kmer-size")
 #define ref_destination() (arg=="-r" || arg== "--reference")
 #define tested_destination() (arg=="-m" || arg== "--mutant")
 #define help_CLI() (arg=="-h" || arg== "--help")
@@ -28,7 +28,7 @@ bool cli_parser(int argc,char* argv[],cli_parameter &parameter_set){
             if(num<0 || num>=1.0) return 0;
             parameter_set.max_ref_freq=num;
         }
-        else if(kmer_size_conditoin()){
+        else if(kmer_size_condition()){
             parameter_set.kmer_size=stoi(argv[++i]);
             if(parameter_set.kmer_size>=32 || parameter_set.kmer_size<=0) return 0;
         }

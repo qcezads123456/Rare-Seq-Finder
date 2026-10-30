@@ -10,4 +10,6 @@ result/*
 !result/.gitkeep
 .venv
 data/demo/test
-analysis
+analysis/*
+!analysis/summary_create.py
+.vscode
