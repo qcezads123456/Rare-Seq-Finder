@@ -6,7 +6,6 @@ import pysam
 import json
 import math
 from dataclasses import dataclass,field
-SVTYPE_SUFFIX={"INS","DEL"}
 CHROM_TAG=["SNP","INS","DEL","ALL"]
 TOLERANCE_RATE=[0,0.2,0.4,0.6,0.8,1]
 @dataclass
@@ -31,17 +30,6 @@ candidate_groups = {
     tag: [] for tag in CHROM_TAG
 }
 
-result={
-    #"candidate_total":0,
-    #"candidate_tp":0,
-    #"candidate_fp":0,
-    #"truth_total":0,
-    #"truth_tp":0,
-    #"truth_fn":0,
-    #"precision":0,
-    #"recall":0,
-    #"F1":0
-}
 ROOT = Path(__file__).resolve().parent
 if ROOT.name == "analysis":
     ROOT = ROOT.parent
@@ -76,6 +64,8 @@ def gt_event_count(vcf):
                 pos=record.pos,
             )
         )
+
+
 def offset_calculate(truth_groups:dict,vcf):
     vcf.reset()
     count_snp=0
@@ -102,7 +92,7 @@ def offset_calculate(truth_groups:dict,vcf):
             svlen=record.info.get("SVLEN")[0]
             truth_groups["DEL"][count_del].start=truth_groups["DEL"][count_del].pos+offset_del
             truth_groups["DEL"][count_del].end=end_pos-svlen+1+offset_del
-            offset_del-=svlen
+            offset_del-=abs(svlen)
             count_del+=1
         elif tag=="ALL":
             svtype=record.info.get("SVTYPE")
@@ -121,7 +111,7 @@ def offset_calculate(truth_groups:dict,vcf):
                 svlen=record.info.get("SVLEN")[0]
                 truth_groups["ALL"][count_all].start=truth_groups["ALL"][count_all].pos+offset_all
                 truth_groups["ALL"][count_all].end=end_pos-svlen+1+offset_all
-                offset_all-=svlen
+                offset_all-=abs(svlen)
                 count_all+=1
 
 def matching(truth,candidate,tolerance):
@@ -155,8 +145,51 @@ def matching(truth,candidate,tolerance):
                 if not truth[i].matched_candidates:
                     truth_tp += 1
                 truth[i].matched_candidates.append(value.id)
-    result["candidate_tp"]=candidate_tp
-    result["truth_tp"]=truth_tp
+    return candidate_tp,truth_tp
+
+def header_write_in(summary_set:list,multimatch_set:list):
+    pd.DataFrame(columns=summary_set[0]).to_csv(
+        summary_set[1],
+        sep="\t",
+        index=False
+    )
+    pd.DataFrame(columns=multimatch_set[0]).to_csv(
+        multimatch_set[1],
+        sep="\t",
+        index=False
+    )
+
+def data_write_in(data_set:list):
+    pd.DataFrame([data_set[2]]).to_csv(
+        data_set[1],
+        sep="\t",
+        header= False,  
+        index=False,
+        mode="a"
+        )
+
+def summary_encapsulate(tag,tolerance,summary_value:list):
+    summary_value.append(len(candidate_groups[tag]))
+    candidate_tp,truth_tp=matching(truth_groups[tag],candidate_groups[tag],tolerance)
+    summary_value.append(candidate_tp)
+    summary_value.append(summary_value[2]-summary_value[3])
+    summary_value.append(len(truth_groups[tag]))
+    summary_value.append(truth_tp)
+    summary_value.append(summary_value[5]-summary_value[6])
+    #print(tag)
+    #print("tolerance: ",tolerance)
+    #print("candidate_tp: ",result["candidate_tp"],"truth_tp: ",result["truth_tp"],"truth_total",result["truth_total"])
+    summary_value.append(round(summary_value[3]/summary_value[2],4) if summary_value[2] > 0 else 0.0)
+    summary_value.append(round(summary_value[6]/summary_value[5],4) if summary_value[5] > 0 else 0.0)
+    p=summary_value[8]
+    r=summary_value[9]
+    summary_value.append(round(2*p*r/(p+r),4) if (p+r)>0 else 0.0)
+
+def multimatch_encapsulate(tag,tolerance,multimatch_value:list,record):
+    multimatch_value.append(record.id+1)
+    multimatch_value.append(tag)
+    multimatch_value.append(tolerance)
+    multimatch_value.append(record.matched_candidates)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -173,8 +206,8 @@ def main():
     gt_path=project_path(args.gt)
     md_path=project_path(args.md)
     res_data=pd.read_csv(res_path,sep="\t")
-    with open(md_path,encoding="utf-8") as f:
-        md_data=json.load(f)
+    with open(md_path,encoding="utf-8") as j_f:
+        md_data=json.load(j_f)
     kmer_length=md_data["k-mer_length"]
     with pysam.VariantFile(gt_path) as vcf:
         first_record=next(iter(vcf),None)
@@ -184,27 +217,36 @@ def main():
         candidate_count(res_data)
         gt_event_count(vcf)
         offset_calculate(truth_groups,vcf)
+        serial_num=first_record.chrom.split("|")[0]
+        summary_path=project_path(f"analysis/summary/{serial_num}_validation.tsv")
+        multimatch_path=project_path(f"analysis/summary/{serial_num}_multimatch.tsv")
+        summary_header=[
+            "profile","tolerance length","candidate total","candidate tp",
+            "candidate fp","truth total","truth tp","truth fn",
+            "precision","recall","F1-score"
+        ]
+        multimatch_header=["event ID","profile","tolerance length","matched candidate"]
+        summary_value=[]
+        multimatch_value=[]
+        summary_set=[summary_header,summary_path,summary_value]
+        multimatch_set=[multimatch_header,multimatch_path,multimatch_value]
+        header_write_in(summary_set,multimatch_set)
         for tag in CHROM_TAG:
             for i in TOLERANCE_RATE:
                 tolerance=math.floor(i*kmer_length)
-                result["candidate_total"]=len(candidate_groups[tag])
-                result["truth_total"]=len(truth_groups[tag])
-                matching(truth_groups[tag],candidate_groups[tag],tolerance)
-                result["candidate_fp"]=result["candidate_total"]-result["candidate_tp"]
-                result["truth_fn"]=result["truth_total"]-result["truth_tp"]
-                print(tag)
-                print("tolerance: ",tolerance)
-                print("candidate_tp: ",result["candidate_tp"],"truth_tp: ",result["truth_tp"],"truth_total",result["truth_total"])
-                result["candidate_fp"]=result["candidate_total"]-result["candidate_tp"]
-                result["precision"]=result["candidate_tp"]/result["candidate_total"]
-                result["recall"]=result["truth_tp"]/result["truth_total"]
-                p=result["precision"]
-                r=result["recall"]
-                result["f1"]=2*p*r/(p+r) if (p+r)>0 else 0
+                summary_value.append(tag)
+                summary_value.append(tolerance)
+                summary_encapsulate(tag,tolerance,summary_value)
+                data_write_in(summary_set)
+                for record in truth_groups[tag]:
+                    multimatch_encapsulate(tag,tolerance,multimatch_value,record)
+                    data_write_in(multimatch_set)
+                    multimatch_value.clear()
                 for data_arr in truth_groups.values():
                     for data in data_arr:
                         data.matched_candidates.clear()
-
+                summary_value.clear()
+                multimatch_value.clear()
 
 
 if __name__ == "__main__":
