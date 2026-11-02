@@ -10,6 +10,11 @@ GENERATE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(GENERATE_ARGS):;@:)
 endif
 
+ifeq ($(firstword $(MAKECMDGOALS)),anlyze)
+SUMMARY_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+.PHONY: $(SUMMARY_ARGS)
+$(eval $(SUMMARY_ARGS):;@:)
+endif
 
 PYTHON := python3.12
 VENV := .venv
@@ -20,7 +25,7 @@ REF_DIR := data/ref
 SELECTED_DIR := data/selected/selected.fasta
 DEFAULT_MS_FASTA = $(firstword $(wildcard $(MS_OUTPUT)/*_ms.fasta))
 DEFAULT_REF_FASTA = $(firstword $(wildcard $(REF_DIR)/ref.fasta))
-.PHONY: run build ms_setup clean generate_test_data
+.PHONY: run build ms_setup clean generate_test_data analyze_setup analyze
 
 $(VENV_PY):
 	@$(PYTHON) -m venv $(VENV)
@@ -52,6 +57,17 @@ generate_test_data : ms_setup
 	@$(VENV_PY) scripts/select_seq.py $(GENERATE_ARGS)
 	@$(VENV_MS) -o $(MS_OUTPUT)/mutant.fasta $(SELECTED_DIR) rmt config/mutation.rmt
 	@echo "mutation simulation complete"
+
+ANALYZE_STAMP := $(VENV)/.analyze_installed
+
+$(ANALYZE_STAMP): $(VENV_PY)
+	@$(VENV_PY) -m pip install pysam pandas
+	@touch $@
+
+analyze_setup: $(ANALYZE_STAMP)
+
+analyze : analyze_setup
+	@$(VENV_PY) analysis/summary_create.py $(SUMMARY_ARGS)
 	
 clean :
 	@rm -rf $(VENV) build/*
