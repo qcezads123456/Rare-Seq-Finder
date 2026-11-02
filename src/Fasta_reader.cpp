@@ -11,6 +11,9 @@ vector <DNA_info_t> Fasta_reader(const fs::path entry){
     vector <DNA_info_t> genome_isolate;
     string line;
     while (getline(file, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
         if (!line.empty() && line[0] == '>') {
             genome_isolate.emplace_back();
             genome_isolate.back().header = line.substr(1);

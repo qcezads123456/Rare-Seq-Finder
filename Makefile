@@ -10,7 +10,7 @@ GENERATE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(GENERATE_ARGS):;@:)
 endif
 
-ifeq ($(firstword $(MAKECMDGOALS)),anlyze)
+ifeq ($(firstword $(MAKECMDGOALS)),analyze)
 SUMMARY_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 .PHONY: $(SUMMARY_ARGS)
 $(eval $(SUMMARY_ARGS):;@:)
@@ -25,7 +25,7 @@ REF_DIR := data/ref
 SELECTED_DIR := data/selected/selected.fasta
 DEFAULT_MS_FASTA = $(firstword $(wildcard $(MS_OUTPUT)/*_ms.fasta))
 DEFAULT_REF_FASTA = $(firstword $(wildcard $(REF_DIR)/ref.fasta))
-.PHONY: run build ms_setup clean generate_test_data analyze_setup analyze
+.PHONY: run build ms_setup clean generate_test_data analyze_setup analyze demo
 
 $(VENV_PY):
 	@$(PYTHON) -m venv $(VENV)
@@ -45,8 +45,14 @@ run : build
 	fi
 	@RUN_VIA_MAKE="make run --" ./build/bin/rare-seq-finder \
 	$(RUN_ARGS) \
-	$(if $(filter -r,$(RUN_ARGS)),,-r $(DEFAULT_REF_FASTA)) \
-	$(if $(filter -m,$(RUN_ARGS)),,-m $(DEFAULT_MS_FASTA))
+	$(if $(filter -r --reference,$(RUN_ARGS)),,-r $(DEFAULT_REF_FASTA)) \
+	$(if $(filter -m --mutant,$(RUN_ARGS)),,-m $(DEFAULT_MS_FASTA))
+
+demo : build
+	@$(MAKE) run RUN_ARGS="-r data/demo/demo_ref.fasta -m data/demo/demo_mutation.fasta"
+	@mv result/result.txt result/demo_result.txt
+	@mv result/result.tsv result/demo_result.tsv
+	@mv result/metadata.json result/demo_metadata.json
 
 ms_setup : $(VENV_MS)
 

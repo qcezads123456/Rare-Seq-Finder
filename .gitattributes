@@ -1,0 +1,20 @@
+# Default
+* text=auto
+
+*.cpp       text eol=lf
+*.h         text eol=lf
+*.py        text eol=lf
+Makefile    text eol=lf
+CMakeLists.txt text eol=lf
+*.md        text eol=lf
+*.txt       text eol=lf
+*.fasta     text eol=lf
+*.fna     text eol=lf
+*.fas     text eol=lf
+*.fa     text eol=lf
+*.vcf       text eol=lf
+*.tsv       text eol=lf
+*.json      text eol=lf
+*.rmt       text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf

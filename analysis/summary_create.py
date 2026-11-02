@@ -206,6 +206,12 @@ def main():
     gt_path=project_path(args.gt)
     md_path=project_path(args.md)
     res_data=pd.read_csv(res_path,sep="\t")
+    if not res_path.exists(): 
+        parser.error("input must be an existing file")
+    if not gt_path.exists(): 
+        parser.error("input must be an existing file")
+    if not md_path.exists(): 
+        parser.error("input must be an existing file")
     with open(md_path,encoding="utf-8") as j_f:
         md_data=json.load(j_f)
     kmer_length=md_data["k-mer_length"]
@@ -220,6 +226,7 @@ def main():
         serial_num=first_record.chrom.split("|")[0]
         summary_path=project_path(f"analysis/summary/{serial_num}_validation.tsv")
         multimatch_path=project_path(f"analysis/summary/{serial_num}_multimatch.tsv")
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
         summary_header=[
             "profile","tolerance length","candidate total","candidate tp",
             "candidate fp","truth total","truth tp","truth fn",
