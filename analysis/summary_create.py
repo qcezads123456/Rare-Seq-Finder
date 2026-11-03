@@ -91,7 +91,7 @@ def offset_calculate(truth_groups:dict,vcf):
             end_pos=record.stop
             svlen=record.info.get("SVLEN")[0]
             truth_groups["DEL"][count_del].start=truth_groups["DEL"][count_del].pos+offset_del
-            truth_groups["DEL"][count_del].end=end_pos-svlen+1+offset_del
+            truth_groups["DEL"][count_del].end=end_pos-abs(svlen)+1+offset_del
             offset_del-=abs(svlen)
             count_del+=1
         elif tag=="ALL":
@@ -110,7 +110,7 @@ def offset_calculate(truth_groups:dict,vcf):
                 end_pos=record.stop
                 svlen=record.info.get("SVLEN")[0]
                 truth_groups["ALL"][count_all].start=truth_groups["ALL"][count_all].pos+offset_all
-                truth_groups["ALL"][count_all].end=end_pos-svlen+1+offset_all
+                truth_groups["ALL"][count_all].end=end_pos-abs(svlen)+1+offset_all
                 offset_all-=abs(svlen)
                 count_all+=1
 
@@ -176,9 +176,6 @@ def summary_encapsulate(tag,tolerance,summary_value:list):
     summary_value.append(len(truth_groups[tag]))
     summary_value.append(truth_tp)
     summary_value.append(summary_value[5]-summary_value[6])
-    #print(tag)
-    #print("tolerance: ",tolerance)
-    #print("candidate_tp: ",result["candidate_tp"],"truth_tp: ",result["truth_tp"],"truth_total",result["truth_total"])
     summary_value.append(round(summary_value[3]/summary_value[2],4) if summary_value[2] > 0 else 0.0)
     summary_value.append(round(summary_value[6]/summary_value[5],4) if summary_value[5] > 0 else 0.0)
     p=summary_value[8]
@@ -212,8 +209,8 @@ def main():
         parser.error("input must be an existing file")
     if not md_path.exists(): 
         parser.error("input must be an existing file")
-    with open(md_path,encoding="utf-8") as j_f:
-        md_data=json.load(j_f)
+    with open(md_path,encoding="utf-8") as json_file:
+        md_data=json.load(json_file)
     kmer_length=md_data["k-mer_length"]
     with pysam.VariantFile(gt_path) as vcf:
         first_record=next(iter(vcf),None)

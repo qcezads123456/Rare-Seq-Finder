@@ -1,0 +1,9 @@
+#tolerance rate=20% tolerance length=4
+Coverage threshold	SNP precision	INS precision	DEL precision	ALL precision	SNP recall	INS recall	DEL recall	ALL recall
+21	1.0	1.0	1.0	1.0	1.0	1.0	0.1429	0.7444
+20	1.0	1.0	1.0	1.0	1.0	1.0	0.5	0.8778
+19	1.0	1.0	1.0	1.0	1.0	1.0	0.8214	0.9222
+18	1.0	1.0	1.0	1.0	1.0	1.0	0.8929	0.9444
+17	1.0	1.0	1.0	1.0	1.0	1.0	0.9286	0.9556
+16	1.0	1.0	1.0	1.0	1.0	1.0	0.9286	0.9667
+15	1.0	1.0	1.0	1.0	1.0	1.0	0.9286	0.9667

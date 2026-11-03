@@ -1,0 +1,7 @@
+{
+    "k-mer_length": 21,
+    "max_ref_freq": 0,
+    "coverage_threshold": 21,
+    "reference_seq_count": 20,
+    "target_seq_count": 4
+}

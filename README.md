@@ -1,56 +1,49 @@
 # Rare Sequence Finder
 
-Rare Sequence Finder is a C++17 command-line tool that uses an **alignment-free k-mer approach** to locate candidate regions in DNA sequences containing k-mers that are absent from, or uncommon across, a user-provided reference collection.
+Rare Sequence Finder is a C++17 command-line tool that uses an **alignment-free k-mer approach** to locate candidate regions in DNA sequences containing k-mers that are absent from, or uncommon among the reference collection.
 
-The program compares each target FASTA record against a reference k-mer index and reports positions with concentrated **rare k-mer coverage**.
+**Only reference and target FASTA files are needed for detection.** Simulation is optional and is used for validation.
 
 
 ## Features
 
-- Alignment-free scanning with encoded DNA k-mers (`k = 1–31`).
-- Reference-wide k-mer presence tracking using a 64-bit bitmask (up to 64 reference sequences).
-- Configurable k-mer size, maximum reference frequency, and minimum rare k-mer coverage.
-- Support for multi-record reference and target FASTA files.
-- Per-target reporting of candidate positions and their corresponding DNA sequences.
-- Optional synthetic test-data generation with [Mutation-Simulator](https://github.com/mkpython3/Mutation-Simulator), using SNP, insertion, deletion, and combined-mutation profiles.
-- Makefile commands for environment setup, test-data generation, compilation, and analysis.
+- Encoded DNA k-mer analysis with configurable `k` (`1–31`).
+- Reference k-mer tracking across up to **64 reference sequences**.
+- Adjustable reference-frequency and rare k-mer coverage thresholds.
+- Multi-record reference and target FASTA support.
+- Candidate coordinates and sequences in TXT/TSV reports, with JSON metadata.
+- Optional simulation-based validation for SNPs, insertions, deletions, and mixed mutations.
+
 
 ## Requirements
 
-Use a Linux or WSL environment with:
+**Core detector (Linux or WSL):** GNU Make, CMake 3.20+, and a C++17-compatible compiler.
 
-- GNU Make
-- CMake **3.20+**
-- A C++ compiler supporting **C++17**
-- **Python 3.12** with `venv` and `pip` **only if generating synthetic test data** (the Makefile uses `python3.12` by default)
+**Optional validation:** Python 3.12 with `venv` and `pip`. Mutation-Simulator and the analysis dependencies are installed through the Makefile. Python is not needed for normal detection.
 
-The C++ analyzer can be built and used without installing Mutation-Simulator.
 
 ## Quick Start
 
+## Validation Result
 
 ## Project Structure
+
 ```text
-Rare-Seq-Finder/
-├── README.md
+bioinfo_project/
+├── Makefile                  # Build, run, and validation commands
 ├── CMakeLists.txt
-├── Makefile                  
-├── config/
-│   └── mutation.rmt             # Mutation-Simulator configuration
+├── src/                      # C++ implementation
+├── include/                  # C++ headers
 ├── data/
-│   ├── demo/
-│   │   ├── demo_ref.fasta
-│   │   ├── demo_mutation.fasta
-│   │   ├── demo_result.txt
-│   │   └── demo_mutation_ground_truth.vcf
-│   ├── ref/                    # User-provided reference data
-│   ├── selected/               # Sequence-selection output
-│   └── MS_output/              # Mutation-simulation output directory
-├── include/                    # C++ headers
-├── src/                        # C++ implementation
-├── scripts/
-│   └── select_seq.py
-├── build/                      # Compiled executable
-└── result/                     # Analysis report
+│   ├── demo/                 # Built-in demo
+│   ├── ref/                  # Reference input for default workflow
+│   ├── selected/             # Selected simulation input
+│   ├── MS_output/            # Simulated FASTA and VCF
+│   └──validation_results/    # Validation figures and data
+├── config/                   # Simulation configuration
+├── scripts/                  # Simulation input preparation
+├── analysis/                 # Validation summary
+├── build/                    # Build output
+└── result/                   # Detector output
 ```
-## Performance Benchmark
+
