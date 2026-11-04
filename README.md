@@ -8,7 +8,7 @@ Rare Sequence Finder is a C++17 command-line tool that uses an **alignment-free 
 ## Features
 
 - Encoded DNA k-mer analysis with configurable `k` (`1–31`).
-- Reference k-mer tracking across up to **64 reference sequences**.
+- Reference k-mer tracking across an arbitrary number of reference sequences.
 - Adjustable reference-frequency and rare k-mer coverage thresholds.
 - Multi-record reference and target FASTA support.
 - Candidate coordinates and sequences in TXT/TSV reports, with JSON metadata.

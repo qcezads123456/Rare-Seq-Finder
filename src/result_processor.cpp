@@ -23,10 +23,10 @@ static bool json_file_create(fstream &file){
     else return 1;
 }
 void result_process
-(const vector <DNA_info_t> ref_seq 
-,const vector <DNA_info_t> mutant_seq
-,const cli_parameter parameter_set){
-    unordered_map <uint64_t, uint64_t> ref_kmer_count;
+(const vector <DNA_info_t> &ref_seq 
+,const vector <DNA_info_t> &mutant_seq
+,const cli_parameter &parameter_set){
+    unordered_map <uint64_t, vector<uint64_t>> ref_kmer_count;
     unordered_map <uint64_t, vector<uint64_t>> rare_kmer_position;
     fstream file,file_tsv,metadata_file;
     if(!result_file_create(file)){

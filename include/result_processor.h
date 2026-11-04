@@ -10,7 +10,7 @@
 #include "cli.h"
 #include "Fasta_reader.h"
 void result_process
-(const std::vector <DNA_info_t> genome_isolate 
-,const std::vector <DNA_info_t> genome_mutant
-,const cli_parameter parameter_set);
+(const std::vector <DNA_info_t> &genome_isolate 
+,const std::vector <DNA_info_t> &genome_mutant
+,const cli_parameter &parameter_set);
 #endif

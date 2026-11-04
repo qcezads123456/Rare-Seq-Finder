@@ -20,9 +20,9 @@ static int parser(char nucleotide){
 *********************************************************************/
 
 
-unordered_map <uint64_t, uint64_t> build_kmers_index   
+unordered_map <uint64_t, vector <uint64_t>> build_kmers_index   
 (const vector <DNA_info_t> &genome_isolate,const int kmer_size){
-    unordered_map <uint64_t, uint64_t> kmer_index;
+    unordered_map <uint64_t, vector <uint64_t>> kmer_index;
     uint64_t kmer_mask=1ULL;
     kmer_mask=(kmer_mask<<(kmer_size*2))-1;
     for(size_t i=0;i<genome_isolate.size();i++){
@@ -30,7 +30,8 @@ unordered_map <uint64_t, uint64_t> build_kmers_index
         char ch;
         int count=0;
         uint64_t encode_DNA=0;
-        uint64_t isolate_mask=1ULL<<i;
+        uint64_t isolate_mask=1ULL<<(i%64);
+        uint64_t index=i/64;
         while(!ss.eof()){
             if(count!= kmer_size){
                 
@@ -49,7 +50,8 @@ unordered_map <uint64_t, uint64_t> build_kmers_index
                     }
                 }
                 if(count==kmer_size){
-                    kmer_index[encode_DNA] |= isolate_mask;
+                    if(index>=kmer_index[encode_DNA].size()) kmer_index[encode_DNA].resize(index+1,0ULL);
+                    kmer_index[encode_DNA][index] |= isolate_mask;
                 }
             }
             else{
@@ -62,7 +64,8 @@ unordered_map <uint64_t, uint64_t> build_kmers_index
                     encode_DNA <<= 2;
                     encode_DNA |= parser(ch);
                     encode_DNA &=kmer_mask;
-                    kmer_index[encode_DNA] |= isolate_mask;
+                    if(index>=kmer_index[encode_DNA].size()) kmer_index[encode_DNA].resize(index+1,0ULL);
+                    kmer_index[encode_DNA][index] |= isolate_mask;
                 }
             }
         }
@@ -72,7 +75,7 @@ unordered_map <uint64_t, uint64_t> build_kmers_index
 
 unordered_map <uint64_t, vector <uint64_t>> find_rare_kmers   // [kmer_encode, position(actual value)]
 (const DNA_info_t &genome_mutant, int kmer_size 
-,const unordered_map<uint64_t,uint64_t> &kmer_index 
+,const unordered_map<uint64_t,vector<uint64_t>> &kmer_index 
 ,const int isolate_amount,const cli_parameter &parameter_set){  //probably need struct to encapsulate all parameters
     unordered_map <uint64_t, vector<uint64_t>> low_frequency_kmer;
     uint64_t kmer_mask=1ULL;
