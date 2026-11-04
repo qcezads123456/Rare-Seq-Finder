@@ -104,7 +104,10 @@ def main():
         parser.error("reference FASTA file cannot be overwirte")
     if not ref_path.suffix.lower() in FASTA_SUFFIXES :
         parser.error("cannot open the file")
-    seed= np.random.default_rng(args.seed)
+    if args.seed == None:
+        seed=random.randrange(2**63)
+    else:
+        seed=args.seed
     print(seed)
     rng = random.Random(seed)
     source_file,header,sequence=pick_reference(ref_path,rng)
