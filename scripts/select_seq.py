@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse
 import random
+import numpy as np
 from pathlib import Path
 
 FASTA_SUFFIXES = {".fa", ".fasta", ".fna", ".fas"}
@@ -91,7 +92,8 @@ def main():
     )
     parser.add_argument("--ref", "--input", dest="ref", default="data/ref/ref.fasta",
                         help="FASTA file (default: data/ref/ref.fasta)")
-
+    parser.add_argument("--s", "--seed",type=int, dest="seed", default=None,
+                            help="Enter specific seed number")
     args = parser.parse_args()
 
     ref_path = project_path(args.ref)
@@ -102,7 +104,7 @@ def main():
         parser.error("reference FASTA file cannot be overwirte")
     if not ref_path.suffix.lower() in FASTA_SUFFIXES :
         parser.error("cannot open the file")
-    seed= random.randrange(30000)
+    seed= np.random.default_rng(args.seed)
     print(seed)
     rng = random.Random(seed)
     source_file,header,sequence=pick_reference(ref_path,rng)
