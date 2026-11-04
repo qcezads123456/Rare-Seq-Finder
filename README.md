@@ -102,6 +102,7 @@ make analyze -- --res path/to/result.tsv --gt path/to/truth.vcf --md path/to/met
 
 The first command changes the reference used for sequence selection; when doing so, use the same reference with `make run -- -r ...`. The second command overrides the result, ground-truth VCF, and metadata paths. Without these arguments, the scripts use their default paths.
 
+Furthermore, [RMT configuration](config/mutation.rmt) details can be found in the [Mutation Simulator README](https://github.com/mkpython3/Mutation-Simulator#rmt-mode).
 
 ## Validation Result
 
